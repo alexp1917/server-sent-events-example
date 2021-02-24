@@ -1,5 +1,5 @@
 {
-  "name": "ex",
+  "name": "server-sent-events-example",
   "version": "0.0.0",
   "private": true,
   "scripts": {

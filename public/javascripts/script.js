@@ -35,13 +35,13 @@ $(() => {
     // If the clicked element doesn't have the right selector, bail
     if (!event.target.matches('button')) return;
 
+    if (event.target.textContent !== 'Delete') return;
+    console.log('got event on target', event.target);
+
     var theId = event.target.dataset.id;
     console.log('have to delete', theId);
     try {
       var response = await axios.delete('/examples/' + theId);
-      inputValue.disabled = false;
-      inputValue.value = "";
-
       console.log(response);
     } catch (e) {
       console.error(e);
@@ -70,9 +70,4 @@ $(() => {
       console.error(e);
     }
   });
-
-  function appendRow(argument) {
-    // body...
-  }
-
 });

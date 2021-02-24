@@ -33,55 +33,42 @@ router.get('/events', async (req, res, next) => {
 
   events.on('access', sender);
   res.on('close', disconnect);
-
-  // for (var i = 0; i < 10; i++) {
-  //   try {
-  //     await new Promise(r => setTimeout(r, 250));
-  //     res.write(`data: ${JSON.stringify({ hello: 'world' })}\n\n`);
-  //   } catch (e) {
-  //     break;
-  //   }
-  // }
 });
+
+async function serveWithEvents(type, res, op, ...args) {
+  var result = await op(...args);
+  events.emit("access", { type, args, result });
+  res.json(result);
+}
 
 /* C: Add example. */
 router.post('/', async (req, res, next) => {
-  var args = [req.body];
-  var result = await resource.add(...args);
-  res.json(result);
-  events.emit("access", { type: 'post', args, result });
+  // var args = [req.body];
+  // var result = await resource.add(...args);
+  // res.json(result);
+  // events.emit("access", { type: 'post', args, result });
+
+  await serveWithEvents('post', res, resource.add, req.body);
 });
 
 /* R: GET example. */
 router.get('/:id', async (req, res, next) => {
-  var args = [req.param.id];
-  var result = await resource.get(...args);
-  res.json(result);
-  events.emit("access", { type: 'get:id', args, result });
+  await serveWithEvents('get:id', res, resource.get, req.param.id);
 });
 
 /* U: update example. */
 router.put('/:id', async (req, res, next) => {
-  var args = [req.param.id, req.body];
-  var result = await resource.update(...args);
-  res.json(result);
-  events.emit("access", { type: 'put:id', args, result });
+  await serveWithEvents('put:id', res, resource.update, req.param.id, req.body);
 });
 
 /* D: delete example. */
 router.delete('/:id', async (req, res, next) => {
-  var args = [req.param.id];
-  var result = await resource.delete(...args);
-  res.json(result);
-  events.emit("access", { type: 'delete:id', args, result });
+  await serveWithEvents('delete:id', res, resource.delete, req.param.id);
 });
 
 /* GET examples listing. */
 router.get('/', async (req, res, next) => {
-  var args = [req.query.id];
-  var result = await resource.get(...args);
-  res.json(result);
-  events.emit("access", { type: 'get', args, result });
+  await serveWithEvents('get', res, resource.get, req.query.id);
 });
 
 module.exports = router;

@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  hr
+
+
+  table#the-table.table.table-striped.table-hover
+    thead
+      tr
+        th id
+        th data
+        th
+      form#the-form
+        tr
+          th(width="10%")
+          th(width="45%")
+            input#add-value.form-control(type="text" placeholder="new element value")
+          th(width="45%")
+            button.btn.btn-light.btn-sm(type="submit") Add
+    tbody
+      if data
+        each row in Object.entries(data)
+          tr
+            td= row[0]
+            td= JSON.stringify(row[1])
+            td
+              button.btn.btn-danger.btn-sm(type="button") Delete
